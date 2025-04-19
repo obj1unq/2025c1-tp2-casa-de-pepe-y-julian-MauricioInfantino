@@ -1,0 +1,59 @@
+import cuentas.*
+
+
+describe "Cuenta Corriente" {
+  
+  method initialize(){
+    cuentaCorriente.saldo(20)
+  }
+
+  test "se depositan 1000 pesos, el saldo queda en 1020" {
+    cuentaCorriente.depositar(1000)
+    assert.equals(1020, cuentaCorriente.saldo())
+  }
+
+  test "se extraen 50, queda en 970" {
+    cuentaCorriente.depositar(1000)
+    cuentaCorriente.extraer(50)
+    assert.equals(970, cuentaCorriente.saldo())
+  }
+
+  test "se intenta extraer 2000, lanza error" {
+    cuentaCorriente.depositar(1000)
+    cuentaCorriente.extraer(50)
+    assert.throwsException({cuentaCorriente.extraer(2000)})
+  }
+}
+
+describe "Cuenta con gastos" {
+  
+  method initialize(){
+    cuentaConGastos.saldo(500)
+    cuentaConGastos.costoPorOperacion(20)
+  }
+  
+  test "se depositan 1000 pesos, el saldo queda en 1480" {
+    cuentaConGastos.depositar(1000)
+    assert.equals(1480, cuentaConGastos.saldo())
+  }
+
+  test "se extraen 30, queda en 1450" {
+    cuentaConGastos.depositar(1000)
+    cuentaConGastos.extraer(30)
+    assert.equals(1450, cuentaConGastos.saldo())
+  }
+
+  test "se intentan depositar 2000, no se puede y lanza error" {
+    cuentaConGastos.depositar(1000)
+    cuentaConGastos.extraer(30)
+    assert.throwsException({cuentaConGastos.depositar(2000)})
+    assert.equals(1450, cuentaConGastos.saldo())
+  }
+
+  test "se extraen 2000, dejando un saldo de -550" {
+    cuentaConGastos.depositar(1000)
+    cuentaConGastos.extraer(30)
+    cuentaConGastos.extraer(2000)
+    assert.equals(-550, cuentaConGastos.saldo())
+  }
+}
